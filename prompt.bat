@@ -1,0 +1,9 @@
+@ECHO OFF
+
+TITLE Stream Mill
+PROMPT $P$_$G
+SET PATH=%CD%;%PATH%
+CLS
+
+ECHO Stream Mill 0.2.0
+CMD /Q /K

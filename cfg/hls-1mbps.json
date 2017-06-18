@@ -1,0 +1,26 @@
+{
+    "hls": {
+        "output_dir": "{source_beforeext}",
+        "output_single_file": true
+    },
+    "poster": {
+        "output": "{source_beforeext}\\media-{index}\\poster.jpg",
+        "quality": 5
+    },
+    "preview": {
+        "height": 135,
+        "output": "{dirname}{filename}\\preview.jpg",
+        "quality": 5,
+        "target_frames": 100
+    },
+    "template": "mp4-hls",
+    "variants": [
+        { "width":426,  "height":240,  "profile":"baseline", "level":"3.0", "crf":19, "maxrate":160, "bufsize":800,  "abr":64,  "output":"{beforeext}-{height}.mp4" },
+        { "width":640,  "height":360,  "profile":"main",     "level":"3.1", "crf":19, "maxrate":240, "bufsize":1200, "abr":96,  "output":"{beforeext}-{height}.mp4" },
+        { "width":854,  "height":480,  "profile":"main",     "level":"3.1", "crf":19, "maxrate":400, "bufsize":2000, "abr":96,  "output":"{beforeext}-{height}.mp4" },
+        { "width":960,  "height":540,  "profile":"main",     "level":"3.1", "crf":19, "maxrate":540, "bufsize":2700, "abr":128, "output":"{beforeext}-{height}.mp4" },
+        { "width":1138, "height":640,  "profile":"main",     "level":"3.1", "crf":19, "maxrate":700, "bufsize":3500, "abr":128, "output":"{beforeext}-{height}.mp4" },
+        { "width":1280, "height":720,  "profile":"main",     "level":"3.1", "crf":19, "maxrate":800, "bufsize":4000, "abr":128, "output":"{beforeext}-{height}.mp4" },
+        { "width":1920, "height":1080, "profile":"high",     "level":"4.1", "crf":19, "maxrate":960, "bufsize":4800, "abr":128, "output":"{beforeext}-{height}.mp4" }
+    ]
+}

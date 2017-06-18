@@ -1,0 +1,17 @@
+-y -report -loglevel verbose
+-i "{input}"
+-metadata:s:v:0 language=hun
+-c:v libx264
+    -pix_fmt yuv420p
+    -profile:v {profile} -level {level}
+    -preset veryslow
+    -crf {crf} -maxrate {maxrate}k -bufsize {bufsize}k
+    -g 75 -keyint_min 75
+    -x264opts keyint=75:min-keyint=75:no-scenecut
+    -flags +cgop
+    -movflags +faststart
+{scale}
+-c:a libfdk_aac
+    -b:a {abr}k -cutoff 18000
+-af aresample=async=1
+"{output}"
