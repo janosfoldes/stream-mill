@@ -27,13 +27,14 @@ def isset(cfg, key):
 def load(cfg_file):
     """Load config file"""
     cfg = json.load(cfg_file)
-    template = open(
-        r'{dn}\templates\{t}.txt'.format(
-            dn=os.path.dirname(
-                os.path.realpath(
-                    sys.argv[0])),
-            t=cfg['template']),
-        'r')
-    cfg['template'] = template.read()
-    template.close()
+    if 'template' in cfg:
+        template = open(
+            r'{dn}\templates\{t}.txt'.format(
+                dn=os.path.dirname(
+                    os.path.realpath(
+                        sys.argv[0])),
+                t=cfg['template']),
+            'r')
+        cfg['template'] = template.read()
+        template.close()
     return cfg

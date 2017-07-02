@@ -3,6 +3,10 @@
         "output_dir": "{source_beforeext}",
         "output_single_file": true
     },
+    "m3u8": {
+        "add_closed_captions_none": true,
+        "remove_comments": true
+    },
     "poster": {
         "output": "{source_beforeext}\\media-{index}\\poster.jpg",
         "quality": 5

@@ -2,7 +2,7 @@
 main module
 """
 
-import glob
+import glob2
 import os
 import re
 import shlex
@@ -10,7 +10,7 @@ import subprocess
 import sys
 import colorama
 
-VERSION = '0.2.0'
+VERSION = '0.3.0'
 
 colorama.init()
 
@@ -76,7 +76,7 @@ def cmd(command, stderr=None, echo=False):
 
 def iterate_path(path, callback, *args, **kwargs):
     """Iterate through the 'path' and call callback function on every item."""
-    lst = glob.glob(path)
+    lst = glob2.glob(path)
     total = len(lst)
     index = 0
     for src in lst:

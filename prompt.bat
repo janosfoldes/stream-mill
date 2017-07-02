@@ -5,5 +5,5 @@ PROMPT $P$_$G
 SET PATH=%CD%;%PATH%
 CLS
 
-ECHO Stream Mill 0.2.0
+ECHO Stream Mill 0.3.0
 CMD /Q /K

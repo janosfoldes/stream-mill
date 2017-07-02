@@ -17,6 +17,11 @@ DEFAULT_HLS = {
     'output_single_file': True
 }
 
+DEFAULT_M3U8 = {
+    'add_closed_captions_none': False,
+    'remove_comments': False
+}
+
 DEFAULT_POSTER = {
     'height': 135,
     'index': '',
@@ -43,7 +48,7 @@ def create_elements(*args, **kwargs):
     Creates media elements from 'src' according to 'cfg'.
     """
 
-    #Initialize
+    # Initialize
     started = datetime.datetime.now()
     src = kwargs['src']
     cfg = kwargs['cfg']
@@ -68,7 +73,9 @@ def create_elements(*args, **kwargs):
     # Create MP4 variants
     mp4_list = lib.media.create_mp4_variants(src, cfg)
     # Create HLS
-    lib.media.create_hls(mp4_list, cfg, source_beforeext=os.path.splitext(src)[0])
+    master_m3u8 = lib.media.create_hls(mp4_list, cfg, source_beforeext=os.path.splitext(src)[0])
+    # Process M3U8
+    lib.media.process_m3u8(master_m3u8, cfg)
     # Create posters
     lib.media.create_posters(src, mp4_list, cfg, log_path=bext + '-posters.log')
     # Create preview image
@@ -99,14 +106,14 @@ def create_hls(lst, *args, **kwargs):
         # Print info
         lib.prnt.h1('Create HLS')
         # Create HLS
+        output_dir = lib.main.build_path(cfg['output_dir'], cfg['source_beforeext'], cfg)
         print lib.main.cmd(
             'mp4hls.bat --output-dir "{od}" {single} -f "{list}"'
             .format(
-                od=lib.main.build_path(cfg['output_dir'], cfg['source_beforeext'], cfg),
+                od=output_dir,
                 single=('--output-single-file') if cfg['output_single_file'] else '',
                 list='" "'.join(lst)))
-        #od = lib.main.build_path(cfg['output_dir'], cfg['source_beforeext'], cfg)
-        #create_master_m3u8([od + r'\media-1\stream.m3u8'], '.\test.m3u8', True)
+        return os.path.join(output_dir, 'master.m3u8')
 
 
 def create_master_m3u8(lst, output, fix=False):
@@ -230,8 +237,10 @@ def create_poster(src, *args, **kwargs):
         stderr = kwargs.get('stderr') or None
 
         # Print info
-        lib.prnt.param('Input: ', src)
-        lib.prnt.param('Output:', output)
+        lib.prnt.params([
+            ['Input', src],
+            ['Output', output]
+        ])
 
         # Create poster
         ffmpeg('-loglevel verbose -y -i "{i}" -ss 00:00:00.000 -vframes 1 -q:v 5 "{o}"'
@@ -347,3 +356,43 @@ def get_total_frames(src):
                     .format(i=src), stderr=STDOUT)
     return int(re.search(r'frame= *(\d*)', output).group(1))
     #output = ffprobe('-v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of default=nokey=1:noprint_wrappers=1 "{i}"'.format(i=src))
+
+
+def process_m3u8(filename, *args, **kwargs):
+    if filename:
+        cfg = lib.cfg.get_settings('m3u8', DEFAULT_M3U8, *args, **kwargs)
+        if cfg:
+            # Print info
+            lib.prnt.h1('Process M3U8')
+            lib.prnt.param('Filename:', filename)
+            lib.prnt.param('Add CLOSED_CAPTION=NONE:', cfg['add_closed_captions_none'])
+            lib.prnt.param('Remove comments:', cfg['remove_comments'])
+            modified = process_m3u8_file(filename, cfg)
+            lib.prnt.param('Modified:', modified)
+
+
+def process_m3u8_file(filename, cfg):
+    # Init
+    modified = False
+    f = open(filename, 'r+')
+    lines = list(f)
+    i = 0
+    # Process
+    while i < len(lines):
+        line = lines[i]
+        if cfg['add_closed_captions_none'] and line.startswith('#EXT-X-STREAM-INF') and line.find('CLOSED_CAPTIONS') == -1:
+            lines[i] = line.strip('\r\n') + ',CLOSED_CAPTIONS=NONE' + os.linesep
+            modified = True
+        if cfg['remove_comments'] and line.startswith('#') and not line.startswith('#EXT'):
+            del lines[i]
+            modified = True
+            i -= 1
+        i += 1
+    # Write m3u8 if necessary
+    if modified:
+        f.seek(0)
+        f.truncate()
+        f.writelines(lines)
+    # Close m3u8
+    f.close()
+    return modified
