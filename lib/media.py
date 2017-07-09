@@ -365,7 +365,7 @@ def process_m3u8(filename, *args, **kwargs):
             # Print info
             lib.prnt.h1('Process M3U8')
             lib.prnt.param('Filename:', filename)
-            lib.prnt.param('Add CLOSED_CAPTION=NONE:', cfg['add_closed_captions_none'])
+            lib.prnt.param('Add CLOSED-CAPTION=NONE:', cfg['add_closed_captions_none'])
             lib.prnt.param('Remove comments:', cfg['remove_comments'])
             modified = process_m3u8_file(filename, cfg)
             lib.prnt.param('Modified:', modified)

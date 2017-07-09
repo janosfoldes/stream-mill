@@ -42,7 +42,7 @@ def m3u8(source, cfg):
     # Print config
     cfg = lib.cfg.get_settings('m3u8', DEFAULT_M3U8, lib.cfg.load(cfg))
     lib.prnt.h1('Configuration')
-    lib.prnt.param('Add CLOSED_CAPTION=NONE:', cfg['add_closed_captions_none'])
+    lib.prnt.param('Add CLOSED-CAPTION=NONE:', cfg['add_closed_captions_none'])
     lib.prnt.param('Remove comments:', cfg['remove_comments'])
 
     # Process files
