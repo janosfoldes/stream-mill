@@ -380,8 +380,8 @@ def process_m3u8_file(filename, cfg):
     # Process
     while i < len(lines):
         line = lines[i]
-        if cfg['add_closed_captions_none'] and line.startswith('#EXT-X-STREAM-INF') and line.find('CLOSED_CAPTIONS') == -1:
-            lines[i] = line.strip('\r\n') + ',CLOSED_CAPTIONS=NONE' + os.linesep
+        if cfg['add_closed_captions_none'] and line.startswith('#EXT-X-STREAM-INF') and line.find('CLOSED-CAPTIONS') == -1:
+            lines[i] = line.strip('\r\n') + ',CLOSED-CAPTIONS=NONE' + os.linesep
             modified = True
         if cfg['remove_comments'] and line.startswith('#') and not line.startswith('#EXT'):
             del lines[i]
