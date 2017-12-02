@@ -1,6 +1,6 @@
 {
-    "m3u8": {
-        "add_closed_captions_none": true,
-        "remove_comments": true
-    }
+  "m3u8": {
+    "add_closed_captions_none": true,
+    "remove_comments": true
+  }
 }
