@@ -37,9 +37,7 @@ DEFAULT_PREVIEW = {
 }
 
 DEFAULT_VARIANT = {
-    'height': 'source',
-    'output': '{beforeext}.mp4',
-    'width': 'source'
+    'output': '{beforeext}.mp4'
 }
 
 def create_elements(**kwargs):
@@ -128,9 +126,9 @@ def create_mp4(src, template, *args):
     variant = DEFAULT_VARIANT.copy()
     if args and isinstance(args[0], dict):
         variant.update(*args)
-    if str(variant['height']).lower() == 'source':
+    if 'height' not in variant:
         variant['height'] = media_info['height']
-    if str(variant['width']).lower() == 'source':
+    if 'width' not in variant:
         variant['width'] = media_info['width']
     variant['input'] = src
     variant['output'] = lib.main.build_path(variant['output'], src, variant)
@@ -305,7 +303,7 @@ def get_media_info(src, *keys):
 def get_scale_param(source, target):
     """Returns FFmpeg scale parameter"""
     return ('-vf scale=%s:%s' %(target['width'], target['height'])
-            if source['width'] != target['width'] or source['height'] != target['height'] else '')
+        if source['width'] != target['width'] or source['height'] != target['height'] else '')
 
 
 def get_total_frames(src):
