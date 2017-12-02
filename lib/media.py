@@ -37,6 +37,7 @@ DEFAULT_PREVIEW = {
 }
 
 DEFAULT_VARIANT = {
+    'crf': 23,
     'output': '{beforeext}.mp4'
 }
 

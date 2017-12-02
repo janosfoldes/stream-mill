@@ -5,7 +5,7 @@
     -pix_fmt yuv420p
     -profile:v main -level 4.0
     -preset veryslow
-    -crf 23
+    -crf {crf}
     -g 75 -keyint_min 25
     -x264opts keyint=75:min-keyint=25
     -movflags +faststart
