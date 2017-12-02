@@ -168,13 +168,15 @@ def create_mp4(src, template, *args):
 def create_mp4_variants(src, cfg):
     """Create MP4 variants"""
     mp4_list = []
-    media_info = lib.media.get_media_info(src, 'width', 'height')
+    media_info = lib.media.get_media_info(src, 'height')
     if 'variants' in cfg:
         for variant in cfg['variants']:
-            if variant['height'] <= int(media_info['height']):
+            height = (variant['height'] if 'height' in variant
+                      and isinstance(variant['height'], (int, long))
+                      else int(media_info['height']))
+            if height <= int(media_info['height']):
                 mp4_list.append(
                     lib.media.create_mp4(src, cfg['template'], variant))
-            else: break
     else:
         mp4_list.append(
             lib.media.create_mp4(src, cfg['template'], DEFAULT_VARIANT))
