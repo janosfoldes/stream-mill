@@ -9,11 +9,11 @@ import sys
 
 def get_settings(key, defaults, *args, **kwargs):
     """Takes config object from args[0], and returns settings specified by 'key'."""
-    if len(args) == 0 or key not in args[0] or args[0][key] is False:
+    if not args or key not in args[0] or args[0][key] is False:
         return False
     cfg = defaults.copy()
-    for k,v in kwargs.iteritems():
-        cfg[k] = v
+    for k, value in kwargs.iteritems():
+        cfg[k] = value
     if args[0][key] is not True:
         cfg.update(args[0][key])
     return cfg
@@ -21,7 +21,7 @@ def get_settings(key, defaults, *args, **kwargs):
 
 def isset(cfg, key):
     """Returns True when 'key' is set in 'cfg', else returns False."""
-    return ((key in cfg) and (cfg[key] is True)) or isinstance(cfg[key], dict)
+    return (cfg[key] is True) if (key in cfg) else isinstance(cfg[key], dict)
 
 
 def load(cfg_file):

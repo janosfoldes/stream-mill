@@ -2,7 +2,7 @@
 Create MP4
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from os import path
 from lib.cfg import load
 from lib.main import iterate_path, VERSION
@@ -23,16 +23,19 @@ STARTED = datetime.now()
               help='Configuration file. (Default="{d}")'.format(d=DEFAULT_CFG))
 
 def mp4(source, cfg):
+    """
+    Create MP4.
+    """
     iterate_path(
         source,
         create_elements,
         cfg=load(cfg),
         title='CREATE MP4')
-    ENDED = datetime.now()
+    ended = datetime.now()
     params([
         ['Started at', STARTED],
-        ['Ended at', ENDED],
-        ['Elapsed Time', ENDED - STARTED]
+        ['Ended at', ended],
+        ['Elapsed Time', ended - STARTED]
     ])
 
 if __name__ == '__main__':

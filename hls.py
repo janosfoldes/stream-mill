@@ -2,7 +2,7 @@
 Create HLS streams.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from os import path
 from lib.cfg import load
 from lib.main import iterate_path, VERSION
@@ -23,16 +23,19 @@ STARTED = datetime.now()
               help='Configuration file. (Default="{d}")'.format(d=DEFAULT_CFG))
 
 def hls(source, cfg):
+    """
+    Create HLS streams.
+    """
     iterate_path(
         source,
         create_elements,
         cfg=load(cfg),
         title='CREATE HLS')
-    ENDED = datetime.now()
+    ended = datetime.now()
     params([
         ['Started at', STARTED],
-        ['Ended at', ENDED],
-        ['Elapsed Time', ENDED - STARTED]
+        ['Ended at', ended],
+        ['Elapsed Time', ended - STARTED]
     ])
 
 if __name__ == '__main__':

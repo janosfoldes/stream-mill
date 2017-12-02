@@ -2,13 +2,13 @@
 main module
 """
 
-import glob2
 import os
 import re
 import shlex
 import subprocess
 import sys
 import colorama
+import glob2
 
 VERSION = '0.3.0'
 
@@ -23,10 +23,10 @@ def ansi_escape(text):
 
 def build_path(pattern, path, *values):
     """Build path"""
-    dn = os.path.dirname(path)
+    dirname = os.path.dirname(path)
     defaults = {
         'beforeext':os.path.splitext(path)[0],
-        'dirname': ('') if dn == '' else dn + '\\',
+        'dirname': ('') if dirname == '' else dirname + '\\',
         'filename':os.path.splitext(os.path.basename(path))[0]
     }
     merged = defaults.copy()
@@ -52,21 +52,23 @@ def cmd(command, stderr=None, echo=False):
     #print command
     #print 'stderr =', stderr
     #print 'echo =', echo
-    p = subprocess.Popen(
+    process = subprocess.Popen(
         shlex.split(command),
         stdout=subprocess.PIPE,
         stderr=stderr,
         universal_newlines=True
     )
-    #print 'subprocess stderr', p.stderr
+    #print 'subprocess stderr', process.stderr
     while True:
-        line = p.stdout.readline()
+        line = process.stdout.readline()
         output += line
         if not line:
             break
         if echo:
-            #cols = terminalsize.get_terminal_size()[0] - 2
-            #sys.stdout.write(Back.BLACK + Fore.LIGHTGREEN_EX + '\r  ' + line[:cols][:-1].ljust(cols-1))
+            # cols = terminalsize.get_terminal_size()[0] - 2
+            # sys.stdout.write(Back.BLACK
+            #     + Fore.LIGHTGREEN_EX + '\r  '
+            #     + line[:cols][:-1].ljust(cols-1))
             sys.stdout.write('\033[2K\r  {c}{t}'.format(c=colorama.Fore.GREEN, t=line[:cols][:-1]))
             iswrite = True
     if echo and iswrite:
@@ -128,5 +130,5 @@ class Log(object):
         if self.silent is False:
             self.console.write(message)
         #if not message.startswith('\033[2K'):
-        if not re.match('^\033\[\dK', message):
+        if not re.match(r'^\033\[\dK', message):
             self.file.write(ansi_escape(message))

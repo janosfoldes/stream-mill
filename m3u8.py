@@ -3,14 +3,14 @@ M3U8 PROCESSOR
 """
 
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 from os import getcwd, path, sep
+import lib.cfg
 from lib.main import VERSION
 from lib.media import DEFAULT_M3U8, process_m3u8_file
+import lib.prnt
 import click
 import glob2
-import lib.cfg
-import lib.prnt
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 DEFAULT_CFG = r'{}\cfg\m3u8.json'.format(path.dirname(path.realpath(__file__)))
@@ -25,13 +25,16 @@ STARTED = datetime.now()
               help='Configuration file. (Default="{d}")'.format(d=DEFAULT_CFG))
 
 def m3u8(source, cfg):
+    """
+    Process m3u8 files.
+    """
     # Initialize
     log_path = 'm3u8-{}.log'.format(datetime.strftime(STARTED, '%Y%m%d-%H%M%S'))
     log = lib.main.Log(log_path)
     stdout = sys.stdout
     sys.stdout = log
 
-   # Print info
+    # Print info
     lib.prnt.title(title='STREAM MILL -', src='M3U8 Processor')
     lib.prnt.params([
         ['Version', VERSION],
@@ -41,12 +44,12 @@ def m3u8(source, cfg):
 
     # Print config
     cfg = lib.cfg.get_settings('m3u8', DEFAULT_M3U8, lib.cfg.load(cfg))
-    lib.prnt.h1('Configuration')
+    lib.prnt.heading1('Configuration')
     lib.prnt.param('Add CLOSED-CAPTION=NONE:', cfg['add_closed_captions_none'])
     lib.prnt.param('Remove comments:', cfg['remove_comments'])
 
     # Process files
-    lib.prnt.h1('Processed files')
+    lib.prnt.heading1('Processed files')
     lst = glob2.glob(source)
     total = len(lst)
     zerofill = len(str(total))
@@ -63,15 +66,15 @@ def m3u8(source, cfg):
             + lib.prnt.DEFAULT_COLOR
 
     # Print summary
-    ENDED = datetime.now()
+    ended = datetime.now()
     print
     lib.prnt.line(42)
     lib.prnt.params([
         ['Processed', total],
         ['Modified', modified_total],
         ['Started at', STARTED],
-        ['Ended at', ENDED],
-        ['Elapsed Time', ENDED - STARTED]
+        ['Ended at', ended],
+        ['Elapsed Time', ended - STARTED]
     ])
     lib.prnt.line(42)
 
