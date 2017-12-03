@@ -225,6 +225,8 @@ def create_posters(src, lst, *args, **kwargs):
         posters_log = lib.main.Log(
             kwargs.get('log_path') or 'posters.log',
             True)
+        if not lst:
+            lst.append(src)
         for i in xrange(len(lst)):
             lib.media.create_poster(
                 lst[i],
