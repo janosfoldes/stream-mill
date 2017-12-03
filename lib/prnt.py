@@ -8,8 +8,10 @@ from lib.main import ansi_escape
 init() #Initialize colorama => It needs to colors in Windows terminal!
 
 DEFAULT_COLOR = Style.RESET_ALL
-MAIN_COLOR = Fore.YELLOW
+ERROR_COLOR = Fore.LIGHTRED_EX
 LABEL_COLOR = Fore.CYAN
+MAIN_COLOR = Fore.YELLOW
+WARNING_COLOR = Fore.LIGHTYELLOW_EX
 
 
 def heading1(text):
