@@ -22,9 +22,9 @@ DEFAULT_M3U8 = {
 }
 
 DEFAULT_POSTER = {
-    'height': 135,
     'index': '',
     'output': '{beforeext}-poster.jpg',
+    'position': '00:00:00.000000',
     'quality': 5,
     'stderr': None
 }
@@ -193,16 +193,28 @@ def create_poster(src, *args, **kwargs):
         # Set parameters
         output = lib.main.build_path(cfg['output'], src, cfg)
         stderr = kwargs.get('stderr') or None
+        ## Set position
+        media_info = lib.media.get_media_info(src, 'duration')
+        duration = datetime.datetime.strptime(media_info['duration'], '%H:%M:%S.%f')
+        position = datetime.datetime.strptime(cfg['position'], '%H:%M:%S.%f')
+        new_position_text = ''
+        if duration < position:
+            position = max(datetime.datetime.strptime('0', '%f'),
+                           duration - datetime.timedelta(seconds=1))
+            new_position_text = ' {c} Using {p}!'.format(c=lib.prnt.WARNING_COLOR,
+                                                         p=position.time())
 
         # Print info
         lib.prnt.params([
             ['Input', src],
-            ['Output', output]
+            ['Output', output],
+            ['Position', cfg['position'] + new_position_text],
+            ['Quality', cfg['quality']]
         ])
 
         # Create poster
-        ffmpeg('-loglevel verbose -y -i "{i}" -ss 00:00:00.000 -vframes 1 -q:v 5 "{o}"'
-               .format(i=src, o=output),
+        ffmpeg('-loglevel verbose -y -i "{i}" -ss {p} -vframes 1 -q:v {q} "{o}"'
+               .format(i=src, o=output, p=position.time(), q=cfg['quality']),
                stderr=stderr)
 
 
@@ -304,7 +316,7 @@ def get_media_info(src, *keys):
 def get_scale_param(source, target):
     """Returns FFmpeg scale parameter"""
     return ('-vf scale=%s:%s' %(target['width'], target['height'])
-        if source['width'] != target['width'] or source['height'] != target['height'] else '')
+            if source['width'] != target['width'] or source['height'] != target['height'] else '')
 
 
 def get_total_frames(src):
