@@ -267,8 +267,8 @@ def create_preview(src, *args, **kwargs):
         preview_log = lib.main.Log(bext + '-preview.log', True)
         # Create preview PNG
         ffmpeg(
-            (r'-loglevel verbose -y -i "{i}" -frames 1 '
-             r'-vf "select=not(mod(n\,{s})),scale=-1:{h},tile={tc}x1" -vsync vfr "{o}"')
+            ('-loglevel verbose -y -i "{i}" -frames 1 '
+             '-vf "select=\'not(mod(n,{s}))\',scale=-1:{h},tile={tc}x1" -vsync vfr "{o}"')
             .format(i=src, s=step, h=cfg['height'], tc=tile_cols, o=png),
             stderr=preview_log.file)
         preview_log.sep()
