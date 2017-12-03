@@ -167,18 +167,21 @@ def create_mp4(src, template, *args):
 def create_mp4_variants(src, cfg):
     """Create MP4 variants"""
     mp4_list = []
-    media_info = lib.media.get_media_info(src, 'height')
-    if 'variants' in cfg:
-        for variant in cfg['variants']:
-            height = (variant['height'] if 'height' in variant
-                      and isinstance(variant['height'], (int, long))
-                      else int(media_info['height']))
-            if height <= int(media_info['height']):
-                mp4_list.append(
-                    lib.media.create_mp4(src, cfg['template'], variant))
-    else:
-        mp4_list.append(
-            lib.media.create_mp4(src, cfg['template'], DEFAULT_VARIANT))
+    if 'template' in cfg:
+        media_info = lib.media.get_media_info(src, 'height')
+        if 'variants' in cfg and isinstance(cfg['variants'], list):
+            for variant in cfg['variants']:
+                height = (variant['height'] if 'height' in variant
+                          and isinstance(variant['height'], (int, long))
+                          else int(media_info['height']))
+                if height <= int(media_info['height']):
+                    mp4_list.append(
+                        lib.media.create_mp4(src, cfg['template'], variant))
+        elif ('variants' in cfg and cfg['variants']) or ('variants' not in cfg):
+            mp4_list.append(
+                lib.media.create_mp4(src, cfg['template'], DEFAULT_VARIANT))
+    elif 'variants' in cfg and cfg['variants']:
+        print '{c}\nNo template is specified!'.format(c=lib.prnt.ERROR_COLOR)
     return mp4_list
 
 
