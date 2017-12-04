@@ -11,14 +11,14 @@ from lib.prnt import params
 import click
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
-DEFAULT_CFG = r'{}\cfg\mp4.json'.format(path.dirname(path.realpath(__file__)))
+DEFAULT_CFG = path.normpath('{}/cfg/mp4.json'.format(path.dirname(path.realpath(__file__))))
 STARTED = datetime.now()
 
 @click.version_option(version=VERSION)
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.argument('source')
 @click.option('-cfg',
-              type=click.File('r'),
+              type=click.Path(),
               default=DEFAULT_CFG,
               help='Configuration file. (Default="{d}")'.format(d=DEFAULT_CFG))
 
