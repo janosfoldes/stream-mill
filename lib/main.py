@@ -76,6 +76,19 @@ def cmd(command, stderr=None, echo=False):
     return output
 
 
+def fix_existing_path(path):
+    """Returns a path with numbered (...-n) filename if path is exists"""
+    if os.path.isfile(path):
+        i = 0
+        pieces = os.path.splitext(path)
+        while True:
+            i += 1
+            path = '{root}-{index}{ext}'.format(root=pieces[0], index=i, ext=pieces[1])
+            if not os.path.isfile(path):
+                break
+    return path
+
+
 def iterate_path(path, callback, *args, **kwargs):
     """Iterate through the 'path' and call callback function on every item."""
     lst = glob2.glob(path)

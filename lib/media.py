@@ -132,7 +132,8 @@ def create_mp4(src, template, *args):
     if 'width' not in variant:
         variant['width'] = media_info['width']
     variant['input'] = src
-    variant['output'] = lib.main.build_path(variant['output'], src, variant)
+    variant['output'] = lib.main.fix_existing_path(
+        lib.main.build_path(variant['output'], src, variant))
     variant['scale'] = get_scale_param(media_info, variant)
 
     # Print info
