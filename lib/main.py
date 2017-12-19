@@ -10,7 +10,7 @@ import sys
 import colorama
 import glob2
 
-VERSION = '0.3.0'
+VERSION = '0.4.0'
 
 colorama.init()
 
